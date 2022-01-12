@@ -93,7 +93,10 @@ func (d *detector) sample(reader io.Reader, sampleLines int, enclosure byte) (fr
 				} else {
 					i++
 				}
-			} else if (current == '\n' && prev != '\r' && next != byte(0) && next != '\n' || current == '\r') && !enclosed {
+			} else if ((current == '\n' && prev == '\n') || (current == '\n' && prev == '\r')) && next == byte(0) {
+				actualSampleLines--
+				return
+			} else if (current == '\n' && prev != '\r' && next != byte(0) && next != '\n' || current == '\r' && next == '\n') && !enclosed {
 				if actualSampleLines == sampleLines {
 					return
 				}
